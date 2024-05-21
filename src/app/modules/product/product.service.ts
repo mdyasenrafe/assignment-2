@@ -5,7 +5,15 @@ const createProductIntoDB = async (productData: IProduct) => {
   const product = new ProductModel(productData);
   return await product.save();
 };
+const getAllProductsFromDB = async () => {
+  return await ProductModel.find({});
+};
+const getProductByIdFromDB = async (id: string) => {
+  return await ProductModel.findById(id);
+};
 
 export const ProductServices = {
   createProductIntoDB,
+  getAllProductsFromDB,
+  getProductByIdFromDB,
 };
