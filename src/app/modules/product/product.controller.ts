@@ -62,9 +62,48 @@ const getProductByID = async (req: Request, res: Response) => {
     });
   }
 };
+const updateProduct = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const validatedProduct = productValidationSchema.parse(req.body);
 
+    const product = await ProductServices.updateProductByFromDB(
+      productId,
+      validatedProduct
+    );
+    if (!product) {
+      res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+      return;
+    }
+    res.status(200).json({
+      success: true,
+      message: "Product updated successfully!",
+      data: product,
+    });
+  } catch (error: any) {
+    if (error instanceof ZodError) {
+      const formattedMessage = formatZodError(error);
+      res.status(400).json({
+        success: false,
+        message: formattedMessage,
+      });
+    } else {
+      console.error(error);
+      res.status(500).json({
+        success: false,
+        message: `Failed to create product: ${
+          error.message || "Something went wrong"
+        }`,
+      });
+    }
+  }
+};
 export const ProductControllers = {
   createNewProduct,
   getAllProducts,
   getProductByID,
+  updateProduct,
 };
