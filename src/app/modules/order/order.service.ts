@@ -13,7 +13,9 @@ const createOrderIntoDB = async (orderData: IOrder): Promise<IOrder | null> => {
   const order = new OrderModel(orderData);
   return await order.save();
 };
-const getOrdersFromDB = async () => {};
+const getOrdersFromDB = async () => {
+  return OrderModel.find({});
+};
 const getOrdersByEmailFromDB = async (email: string) => {};
 
 export const orderServices = {

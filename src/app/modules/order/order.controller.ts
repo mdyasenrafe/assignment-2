@@ -41,6 +41,12 @@ const createNewOrder = async (req: Request, res: Response) => {
 };
 const getAllOrders = async (req: Request, res: Response) => {
   try {
+    const orders = await orderServices.getOrdersFromDB();
+    res.status(200).json({
+      success: true,
+      message: "Products fetched successfully!",
+      data: orders,
+    });
   } catch (error: any) {
     res.status(500).json({
       success: false,
