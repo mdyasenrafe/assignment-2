@@ -1,6 +1,7 @@
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import { ProductRoutes } from "./app/modules/product/product.route";
+import { OrderRoutes } from "./app/modules/order/order.route";
 
 const app: Application = express();
 
@@ -18,6 +19,7 @@ app.get("/", (req: Request, res: Response) => {
 
 // application routes
 app.use("/api/products", ProductRoutes);
+app.use("/api/orders", OrderRoutes);
 
 // Undefined Route Handling
 app.use((req: Request, res: Response) => {
