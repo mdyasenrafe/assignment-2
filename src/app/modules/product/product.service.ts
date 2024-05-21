@@ -9,19 +9,24 @@ const getAllProductsFromDB = async () => {
   return await ProductModel.find({});
 };
 
-const getProductByIdFromDB = async (id: string) => {
-  return await ProductModel.findById(id);
+const getProductByIdFromDB = async (productId: string) => {
+  return await ProductModel.findById(productId);
 };
 
-const updateProductByFromDB = async (id: string, bodyData: IProduct) => {
-  const query = { _id: id };
+const updateProductByFromDB = async (productId: string, bodyData: IProduct) => {
+  const query = { _id: productId };
   const update = bodyData;
   const options = { new: true };
   return await ProductModel.findOneAndUpdate(query, update, options);
 };
+const deleteProductByFromDB = async (productId: string) => {
+  return await ProductModel.findByIdAndDelete(productId);
+};
+
 export const ProductServices = {
   createProductIntoDB,
   getAllProductsFromDB,
   getProductByIdFromDB,
   updateProductByFromDB,
+  deleteProductByFromDB,
 };
