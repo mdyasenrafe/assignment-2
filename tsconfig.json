@@ -3,7 +3,8 @@
     "target": "es2020",
     "module": "CommonJS",
     "moduleResolution": "Node",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "strict": true
   },
   "include": [
     "src/**/*.ts", // adjust this as needed for your source files
