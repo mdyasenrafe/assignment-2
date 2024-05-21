@@ -13,10 +13,14 @@ const createOrderIntoDB = async (orderData: IOrder): Promise<IOrder | null> => {
   const order = new OrderModel(orderData);
   return await order.save();
 };
-const getOrdersFromDB = async () => {
-  return OrderModel.find({});
+const getOrdersFromDB = async (): Promise<IOrder[]> => {
+  return await OrderModel.find({});
 };
-const getOrdersByEmailFromDB = async (email: string) => {};
+const getOrdersByEmailFromDB = async (
+  email: string
+): Promise<IOrder[] | null> => {
+  return await OrderModel.find({ email: email });
+};
 
 export const orderServices = {
   createOrderIntoDB,

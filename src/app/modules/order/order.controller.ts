@@ -56,6 +56,20 @@ const getAllOrders = async (req: Request, res: Response) => {
 };
 const getOrdersByEmail = async (req: Request, res: Response) => {
   try {
+    const email = req.query.email as string;
+    if (!email) {
+      res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+      return;
+    }
+    const orders = await orderServices.getOrdersByEmailFromDB(email);
+    res.status(200).json({
+      success: true,
+      message: "Products fetched successfully!",
+      data: orders,
+    });
   } catch (error: any) {
     res.status(500).json({
       success: false,

@@ -124,7 +124,6 @@ const deleteProduct = async (req: Request, res: Response) => {
     });
   }
 };
-
 export const searchProducts = async (req: Request, res: Response) => {
   const { searchTerm } = req.query;
   if (!searchTerm) {
