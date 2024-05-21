@@ -28,8 +28,14 @@ const createNewOrder = async (req: Request, res: Response) => {
         success: false,
         message: formattedMessage,
       });
+    } else if (
+      error.message === "Insufficient quantity available in inventory"
+    ) {
+      res.status(404).json({
+        success: false,
+        message: error.message,
+      });
     } else {
-      console.error(error);
       res.status(500).json({
         success: false,
         message: `Failed to create order: ${
