@@ -31,7 +31,7 @@ const createNewOrder = async (req: Request, res: Response) => {
     } else if (
       error.message === "Insufficient quantity available in inventory"
     ) {
-      res.status(404).json({
+      res.status(400).json({
         success: false,
         message: error.message,
       });
@@ -45,6 +45,7 @@ const createNewOrder = async (req: Request, res: Response) => {
     }
   }
 };
+
 const getAllOrders = async (req: Request, res: Response) => {
   try {
     const orders = await orderServices.getOrdersFromDB();
@@ -60,6 +61,7 @@ const getAllOrders = async (req: Request, res: Response) => {
     });
   }
 };
+
 const getOrdersByEmail = async (req: Request, res: Response) => {
   try {
     const email = req.query.email as string;
@@ -72,7 +74,7 @@ const getOrdersByEmail = async (req: Request, res: Response) => {
     }
     const orders = await orderServices.getOrdersByEmailFromDB(email);
     if (orders?.length === 0) {
-      res.status(200).json({
+      res.status(404).json({
         success: false,
         message: "Order not found",
         data: null,

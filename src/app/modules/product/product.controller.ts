@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { productValidationSchema } from "./product.validation";
 import { ProductServices } from "./product.service";
-import { ZodError, ZodIssue } from "zod";
+import { ZodError } from "zod";
 import { formatZodError } from "../../apiError/formatZodError";
 
 const createNewProduct = async (req: Request, res: Response) => {
@@ -31,6 +31,7 @@ const createNewProduct = async (req: Request, res: Response) => {
     }
   }
 };
+
 const getAllProducts = async (req: Request, res: Response) => {
   try {
     const products = await ProductServices.getAllProductsFromDB();
@@ -40,12 +41,14 @@ const getAllProducts = async (req: Request, res: Response) => {
       data: products,
     });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({
       success: false,
       message: "Something went wrong",
     });
   }
 };
+
 const getProductByID = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
@@ -53,45 +56,45 @@ const getProductByID = async (req: Request, res: Response) => {
     if (product) {
       res.status(200).json({
         success: true,
-        message: "Products fetched successfully!",
+        message: "Product fetched successfully!",
         data: product,
       });
     } else {
-      res.status(200).json({
+      res.status(404).json({
         success: false,
         message: "Product not found",
         data: null,
       });
     }
   } catch (error: any) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({
       success: false,
       message: "Something went wrong",
     });
   }
 };
+
 const updateProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const validatedProduct = productValidationSchema.parse(req.body);
-
     const product = await ProductServices.updateProductByFromDB(
       productId,
       validatedProduct
     );
-    if (!product) {
+    if (product) {
+      res.status(200).json({
+        success: true,
+        message: "Product updated successfully!",
+        data: product,
+      });
+    } else {
       res.status(404).json({
         success: false,
         message: "Product not found",
       });
-      return;
     }
-    res.status(200).json({
-      success: true,
-      message: "Product updated successfully!",
-      data: product,
-    });
   } catch (error: any) {
     if (error instanceof ZodError) {
       const formattedMessage = formatZodError(error);
@@ -103,37 +106,42 @@ const updateProduct = async (req: Request, res: Response) => {
       console.error(error);
       res.status(500).json({
         success: false,
-        message: `Failed to create product: ${
+        message: `Failed to update product: ${
           error.message || "Something went wrong"
         }`,
       });
     }
   }
 };
+
 const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const product = await ProductServices.deleteProductByFromDB(productId);
-    if (!product) {
+    const productDeleted = await ProductServices.deleteProductByFromDB(
+      productId
+    );
+    if (productDeleted) {
+      res.status(200).json({
+        success: true,
+        message: "Product deleted successfully!",
+        data: null,
+      });
+    } else {
       res.status(404).json({
         success: false,
         message: "Product not found",
       });
-      return;
     }
-    res.status(200).json({
-      success: true,
-      message: "Product deleted successfully!",
-      data: null,
-    });
   } catch (error: any) {
+    console.error(error);
     res.status(500).json({
       success: false,
       message: "Something went wrong",
     });
   }
 };
-export const searchProducts = async (req: Request, res: Response) => {
+
+const searchProducts = async (req: Request, res: Response) => {
   const { searchTerm } = req.query;
   if (!searchTerm) {
     res.status(400).json({
@@ -148,7 +156,7 @@ export const searchProducts = async (req: Request, res: Response) => {
     );
     res.status(200).json({
       success: true,
-      message: `Products matching search term ${searchTerm} fetched successfully!`,
+      message: `Products matching search term '${searchTerm}' fetched successfully!`,
       data: products,
     });
   } catch (error: any) {
