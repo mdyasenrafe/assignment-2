@@ -124,10 +124,41 @@ const deleteProduct = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const searchProducts = async (req: Request, res: Response) => {
+  const { searchTerm } = req.query;
+  if (!searchTerm) {
+    res.status(400).json({
+      success: false,
+      message: "Search term is required",
+    });
+    return;
+  }
+  try {
+    const products = await ProductServices.searchProductsInDB(
+      searchTerm.toString()
+    );
+    res.status(200).json({
+      success: true,
+      message: `Products matching search term ${searchTerm} fetched successfully!`,
+      data: products,
+    });
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: `Failed to search products: ${
+        error.message || "Something went wrong"
+      }`,
+    });
+  }
+};
+
 export const ProductControllers = {
   createNewProduct,
   getAllProducts,
   getProductByID,
   updateProduct,
   deleteProduct,
+  searchProducts,
 };
