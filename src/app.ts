@@ -1,5 +1,6 @@
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
+import { ProductRoutes } from "./app/modules/product/product.route";
 
 const app: Application = express();
 
@@ -10,12 +11,13 @@ app.use(
   express.urlencoded({ limit: "25mb", extended: true, parameterLimit: 50000 })
 );
 
-// Test route
+// test route
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to the API.");
 });
 
 // application routes
+app.use("/api/products", ProductRoutes);
 
 // Undefined Route Handling
 app.use((req: Request, res: Response) => {

@@ -18,6 +18,7 @@ const productSchema = new Schema<IProduct>({
     inStock: { type: Boolean, required: true },
   },
 });
+
 // Create the model from the schema
 const ProductModel = model<IProduct>("product", productSchema);
 
