@@ -15,7 +15,7 @@ const getAllProductsFromDB = async (): Promise<IProduct[]> => {
 const getProductByIdFromDB = async (
   productId: string
 ): Promise<IProduct | null> => {
-  return await ProductModel.findById(productId);
+  return await ProductModel.findOne({ _id: productId });
 };
 
 const updateProductByFromDB = async (

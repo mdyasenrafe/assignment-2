@@ -5,7 +5,7 @@ import OrderModel from "./order.model";
 const createOrderIntoDB = async (orderData: IOrder): Promise<IOrder | null> => {
   const { productId } = orderData;
   const productExists = await ProductServices.getProductByIdFromDB(productId);
-  console.log("productExists", productExists);
+
   if (!productExists) {
     return null;
   }

@@ -49,13 +49,22 @@ const getAllProducts = async (req: Request, res: Response) => {
 const getProductByID = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const products = await ProductServices.getProductByIdFromDB(productId);
-    res.status(200).json({
-      success: true,
-      message: "Products fetched successfully!",
-      data: products,
-    });
+    const product = await ProductServices.getProductByIdFromDB(productId);
+    if (product) {
+      res.status(200).json({
+        success: true,
+        message: "Products fetched successfully!",
+        data: product,
+      });
+    } else {
+      res.status(200).json({
+        success: false,
+        message: "Product not found",
+        data: null,
+      });
+    }
   } catch (error: any) {
+    console.log(error);
     res.status(500).json({
       success: false,
       message: "Something went wrong",

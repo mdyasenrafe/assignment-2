@@ -44,7 +44,7 @@ const getAllOrders = async (req: Request, res: Response) => {
     const orders = await orderServices.getOrdersFromDB();
     res.status(200).json({
       success: true,
-      message: "Products fetched successfully!",
+      message: "Orders fetched successfully!",
       data: orders,
     });
   } catch (error: any) {
@@ -65,11 +65,19 @@ const getOrdersByEmail = async (req: Request, res: Response) => {
       return;
     }
     const orders = await orderServices.getOrdersByEmailFromDB(email);
-    res.status(200).json({
-      success: true,
-      message: "Products fetched successfully!",
-      data: orders,
-    });
+    if (orders?.length === 0) {
+      res.status(200).json({
+        success: false,
+        message: "Order not found",
+        data: null,
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: "Orders fetched successfully for user email!",
+        data: orders,
+      });
+    }
   } catch (error: any) {
     res.status(500).json({
       success: false,
